@@ -5,7 +5,7 @@ import { MdLocationPin, MdSearch } from "react-icons/md";
 import { FaWind, FaRegCompass, FaTemperatureHigh } from "react-icons/fa";
 
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer} from "react-toastify";
+import { ToastContainer, toast} from "react-toastify";
 
 const Weather = () => {
   const [location, setLocation] = useState("Delhi");
@@ -43,10 +43,11 @@ const Weather = () => {
       const dailyResponse = await fetch(
         `${apiUrl}2.5/forecast?q=${location}&units=${unit}&appid=${apiKey}`
       );
+      if(!dailyResponse.ok){
+        toast.error("City not found. Please enter a valid city name.");
+        return; 
+      }
       const dailyData = await dailyResponse.json();
-      
-      console.log(dailyData)
-
       const filteredDailyData = dailyData?.list?.filter((_, index) => (index+1) % 8 === 0);
       setnextdays(filteredDailyData)
 
